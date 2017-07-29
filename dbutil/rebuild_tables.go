@@ -19,8 +19,8 @@ func RebuildTables(db *sqlx.DB) error {
 			size int(11),
 			type varchar(255),
 			kind varchar(255),
-			scanned_at datetime,
-			file_modified_at datetime
+			scanned_at int(11),
+			file_modified_at int(11)
 		)`,
 
 		// `DROP INDEX file_info_path_hash`,
