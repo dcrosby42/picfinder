@@ -1,7 +1,7 @@
 package fileinfo
 
 type FileInfo struct {
-	Id                 uint64 `db:"id"`
+	Id                 int64  `db:"id"`
 	Host               string `db:"host"`
 	Path               []byte `db:"path"`
 	PathHash           uint32 `db:"path_hash"`

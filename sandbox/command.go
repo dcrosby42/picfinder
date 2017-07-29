@@ -71,17 +71,16 @@ func insertFileInfo(db *sqlx.DB) error {
 		ScannedAtUnix:      time.Now().Unix(),
 		FileModifiedAtUnix: time.Now().Add(-1 * time.Hour).Unix(),
 	}
-	_ = f
-	var err error
-	_, err = db.NamedExec("INSERT INTO file_info (host,path,path_hash,content_hash,content_hash_lower_32,size,type,kind,scanned_at,file_modified_at) VALUES(:host,:path,:path_hash,:content_hash,:content_hash_lower_32,:size,:type,:kind,:scanned_at,:file_modified_at)", f)
+	_, err := fileinfo.Insert(db, &f)
 	if err != nil {
 		return err
 	}
+	fmt.Printf("!!!! insert FileInfo id=%d\n", f.Id)
+
 	return nil
 }
 func queryFileInfo(db *sqlx.DB) error {
-	var f2 fileinfo.FileInfo
-	err := db.Get(&f2, "SELECT * FROM file_info WHERE id=?", 2)
+	f2, err := fileinfo.Get(db, 2)
 	if err != nil {
 		return err
 	}
