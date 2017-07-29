@@ -31,7 +31,7 @@ func sandbox_scan_command() cli.Command {
 			err := scan.WalkFiles(dirname, func(dname string, info os.FileInfo) error {
 				fcount += 1
 				filepath := dname + "/" + info.Name()
-				// contentHash, herr := scan.HashFileContentSha256(filepath)
+				// contentHash,lower32, herr := scan.HashFileContentSha256(filepath)
 				// if herr != nil {
 				// 	fmt.Printf("!!!! ERR filepath=%s err=%s\n", filepath, herr)
 				// }

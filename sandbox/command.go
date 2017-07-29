@@ -67,8 +67,8 @@ func insertFileInfo(db *sqlx.DB) error {
 		Size:               1024,
 		ContentHash:        []byte("fake content hash"),
 		ContentHashLower32: 5678,
-		Type:               "jpg",
-		Kind:               "picture",
+		Type:               fileinfo.JpegType,
+		Kind:               fileinfo.PictureKind,
 		ScannedAtUnix:      time.Now().Unix(),
 		FileModifiedAtUnix: time.Now().Add(-1 * time.Hour).Unix(),
 	}
