@@ -16,10 +16,19 @@ tools/picfinder-db.sh
 
 ```
 picfinder db rebuild -really
+picfinder server
+```
+
+```
+# Ping the api server
+picfinder ping --host localhost --port 13131
+
+# Scan local files and send to the api:
+picfinder scan update --dir ~/Pictures/Photosa --host localhost --port 13131
 ```
 
 
-### Generating the grpc code
+### Generating the grpc protobuf code
 
 1. Temporarily add imports to `main.go`:
   - `_ "github.com/golang/protobuf/proto"`

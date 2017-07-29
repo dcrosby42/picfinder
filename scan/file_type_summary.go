@@ -2,6 +2,7 @@ package scan
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/dcrosby42/picfinder/fileinfo"
 )
@@ -23,6 +24,7 @@ func PrintFileTypeSummary(host string, dirname string, scanAll bool) error {
 
 	fcount := 0
 	byType := make(map[fileinfo.FileType]*ftSummary)
+	started := time.Now()
 	for info := range infoC {
 		fcount++
 		summ, ok := byType[info.Type]
@@ -32,6 +34,8 @@ func PrintFileTypeSummary(host string, dirname string, scanAll bool) error {
 		}
 		summ.Count++
 	}
+	elapsed := time.Now().Sub(started)
+	fmt.Printf("Elapsed: %s\n", elapsed)
 	fmt.Printf("Total: %d\n", fcount)
 	for ftype, summ := range byType {
 		fmt.Printf("%s: %d\n", ftype, summ.Count)

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/dcrosby42/picfinder/api_client"
 	"github.com/dcrosby42/picfinder/api_server"
 	"github.com/dcrosby42/picfinder/commands"
 	"github.com/dcrosby42/picfinder/dbutil"
@@ -19,6 +20,7 @@ func main() {
 	app.Commands = []cli.Command{
 		commands.ScanCommand(),
 		api_server.Command(),
+		api_client.PingCommand(),
 		dbutil.Command(),
 		sandbox.Command(),
 	}

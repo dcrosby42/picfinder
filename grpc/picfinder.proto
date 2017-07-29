@@ -3,6 +3,7 @@ syntax = "proto3";
 package picfinder_grpc;
 
 service Picfinder {
+  rpc Ping(PingRequest) returns (PingResponse) {}
   rpc AddFile(AddFileRequest) returns (AddFileResponse) {}
 }
 
@@ -12,6 +13,14 @@ message RequestHeader {
 message ResponseHeader {
   uint32 status = 1;
   string message = 2;
+}
+
+message PingRequest {
+  RequestHeader Header = 1;
+}
+
+message PingResponse {
+  ResponseHeader Header = 1;
 }
 
 message FileInfo {

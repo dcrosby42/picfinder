@@ -8,10 +8,15 @@ func Command() cli.Command {
 	return cli.Command{
 		Name:  "server",
 		Usage: "Start the Picfinder GRPC API Server",
-		// Subcommands: []cli.Command{
-		// },
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "bind",
+				Usage: "Server bind addr",
+				Value: ":13131",
+			},
+		},
 		Action: func(c *cli.Context) error {
-			err := BuildAndListen(":13131")
+			err := BuildAndListen(c.String("bind"))
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}

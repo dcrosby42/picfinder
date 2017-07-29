@@ -12,22 +12,47 @@ import (
 	"google.golang.org/grpc"
 )
 
+const ErrGeneral = 1
+const ErrBadParams = 2
+const ErrDbConn = 3
+
 // Implements the picfinder_grpc.PicfinderServer interface:
 type apiServer struct {
 	db *sqlx.DB
 }
 
+func (me *apiServer) Ping(ctx context.Context, request *picfinder_grpc.PingRequest) (*picfinder_grpc.PingResponse, error) {
+	fmt.Printf("Received ping request\n")
+	resp := &picfinder_grpc.PingResponse{
+		Header: &picfinder_grpc.ResponseHeader{
+			Status:  0,
+			Message: "PONG",
+		},
+	}
+	return resp, nil
+}
+
 func (me *apiServer) AddFile(ctx context.Context, request *picfinder_grpc.AddFileRequest) (*picfinder_grpc.AddFileResponse, error) {
-	fmt.Printf("!!!! AddFile request.FileInfo%#v\n", request.FileInfo)
+	resp := &picfinder_grpc.AddFileResponse{}
+	resp.Header = &picfinder_grpc.ResponseHeader{}
+	if request.FileInfo == nil {
+		fmt.Printf("!!! ERR AddFile() invoked with nil FileInfo\n")
+		resp.Header.Status = ErrBadParams
+		resp.Header.Message = "AddFileRequest.FileInfo must not be bil"
+		return resp, nil
+	}
 	if request.FileInfo != nil {
 		fileInfo := fileinfo.FromGrpcFileInfo(request.FileInfo)
-		_, err := fileinfo.Insert(me.db, &fileInfo)
+		fmt.Printf("AddFile(): host=%s path=%s contentHashLower32=%d\n", fileInfo.Host, fileInfo.PathString(), fileInfo.ContentHashLower32)
+		_, err := fileinfo.Insert(me.db, fileInfo)
 		if err != nil {
-			fmt.Printf("!!!! --> ERR! %s\n", err)
+			fmt.Printf("!!! ERR AddFile() updating db err=%s\n", err)
+			resp.Header.Status = ErrDbConn
+			resp.Header.Message = fmt.Sprintf("AddFile() database error err=%s", err)
+			return resp, nil
 		}
 	}
 
-	resp := &picfinder_grpc.AddFileResponse{}
 	return resp, nil
 }
 
