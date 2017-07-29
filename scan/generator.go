@@ -12,6 +12,12 @@ import (
 func GeneratePictureFiles(host string, dirname string, infoChan chan fileinfo.FileInfo) {
 	GenerateFilteredFiles(host, dirname, IsPicture, infoChan)
 }
+func GenerateMediaFiles(host string, dirname string, infoChan chan fileinfo.FileInfo) {
+	GenerateFilteredFiles(host, dirname, IsMedia, infoChan)
+}
+func GenerateAllFiles(host string, dirname string, infoChan chan fileinfo.FileInfo) {
+	GenerateFilteredFiles(host, dirname, AllowAny, infoChan)
+}
 
 func GenerateFilteredFiles(host string, dirname string, shouldKeep func(string, os.FileInfo) bool, infoChan chan fileinfo.FileInfo) {
 	WalkFiles(dirname, func(dname string, info os.FileInfo) error {
@@ -32,6 +38,7 @@ func GenerateFilteredFiles(host string, dirname string, shouldKeep func(string, 
 		}
 		return nil
 	})
+	close(infoChan)
 }
 
 func LowercaseFileExt(fname string) string {
@@ -58,6 +65,10 @@ func IsPicture(dirname string, info os.FileInfo) bool {
 func IsPictureOrMovie(dirname string, info os.FileInfo) bool {
 	fkind := InferFileKind(info.Name())
 	return fkind == fileinfo.PictureKind || fkind == fileinfo.MovieKind
+}
+func IsMedia(dirname string, info os.FileInfo) bool {
+	fkind := InferFileKind(info.Name())
+	return fkind == fileinfo.PictureKind || fkind == fileinfo.MovieKind || fkind == fileinfo.SoundKind
 }
 
 func AllowAny(dirname string, info os.FileInfo) bool {

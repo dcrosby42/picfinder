@@ -58,6 +58,7 @@ const WavType = FileType("wav")
 const OggType = FileType("ogg")
 const Mp3Type = FileType("mp3")
 const M4aType = FileType("m4a")
+const AacType = FileType("aac")
 
 const Mp4Type = FileType("mp4")
 const MpgType = FileType("mpg")
@@ -65,8 +66,10 @@ const MovType = FileType("mov")
 const AviType = FileType("avi")
 const WmvType = FileType("wmv")
 const FlvType = FileType("flv")
+const FlaType = FileType("fla")
 const SwfType = FileType("swf")
 const M4vType = FileType("m4v")
+const WebmType = FileType("webm")
 
 const PdfType = FileType("pdf")
 
@@ -88,14 +91,18 @@ func init() {
 	_typeKind[OggType] = SoundKind
 	_typeKind[Mp3Type] = SoundKind
 	_typeKind[M4aType] = SoundKind
+	_typeKind[AacType] = SoundKind
 
-	_typeKind[MovType] = MovieKind
-	_typeKind[AviType] = MovieKind
 	_typeKind[Mp4Type] = MovieKind
 	_typeKind[MpgType] = MovieKind
+	_typeKind[MovType] = MovieKind
+	_typeKind[AviType] = MovieKind
+	_typeKind[WmvType] = MovieKind
 	_typeKind[FlvType] = MovieKind
+	_typeKind[FlaType] = MovieKind
 	_typeKind[SwfType] = MovieKind
 	_typeKind[M4vType] = MovieKind
+	_typeKind[WebmType] = MovieKind
 
 	_typeKind[PdfType] = DocKind
 
@@ -115,6 +122,7 @@ func init() {
 	_extensionType["j2k"] = Jpeg2KType
 	_extensionType["j2c"] = Jpeg2KType
 	_extensionType["mpeg"] = MpgType
+	_extensionType["m4r"] = M4aType
 }
 
 func FileTypeForExt(ext string) FileType {

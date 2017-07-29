@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/dcrosby42/picfinder/commands"
 	"github.com/dcrosby42/picfinder/dbutil"
 	"github.com/dcrosby42/picfinder/sandbox"
 	"github.com/urfave/cli"
@@ -12,6 +13,7 @@ func main() {
 	app := cli.NewApp()
 
 	app.Commands = []cli.Command{
+		commands.ScanCommand(),
 		dbutil.Command(),
 		sandbox.Command(),
 	}

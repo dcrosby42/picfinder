@@ -3,10 +3,12 @@ package sandbox
 import (
 	// "github.com/dcrosby42/picfinder/commands"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/dcrosby42/picfinder/dbutil"
 	"github.com/dcrosby42/picfinder/fileinfo"
+	"github.com/dcrosby42/picfinder/scan"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli"
 )
@@ -19,6 +21,7 @@ func Command() cli.Command {
 			sandbox_insert_command(),
 			sandbox_retrieve_command(),
 			sandbox_scan_command(),
+			sandbox_ext_command(),
 		},
 	}
 }
@@ -87,5 +90,61 @@ func queryFileInfo(db *sqlx.DB) error {
 	}
 	fmt.Printf("!!!! f2: %#v\n", f2)
 
+	return nil
+}
+
+func sandbox_ext_command() cli.Command {
+	return cli.Command{
+		Name:  "findext",
+		Usage: "Scan a dir and summarize all file extensions therein",
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "dir",
+				Usage: "The dir to start scanning in",
+				Value: "/Users/crosby/Pictures",
+			},
+		},
+		Action: func(c *cli.Context) error {
+			dirname := c.String("dir")
+			err := summarizeFileExtensions(dirname)
+			if err != nil {
+				return cli.NewExitError(err.Error(), -1)
+			}
+			return nil
+		},
+	}
+}
+
+func summarizeFileExtensions(dirname string) error {
+	extSet := make(map[string]int)
+	scan.WalkFiles(dirname, func(dname string, info os.FileInfo) error {
+		ext := scan.LowercaseFileExt(info.Name())
+		if ext != "" {
+			count, ok := extSet[ext]
+			if !ok {
+				extSet[ext] = 1
+			} else {
+				extSet[ext] = count + 1
+			}
+			// extSet[ext] = true
+		}
+		return nil
+	})
+	fmt.Printf("Found %d distinct extensions\n", len(extSet))
+	byKind := make(map[fileinfo.FileKind]int)
+	for ext, count := range extSet {
+		kind := fileinfo.FileKindForExt(ext)
+		fmt.Printf("  %s, %s(%s), %d\n", ext, kind, fileinfo.FileTypeForExt(ext), count)
+		kc, ok := byKind[kind]
+		if !ok {
+			kc = 0
+		}
+		byKind[kind] = kc + count
+
+	}
+	fmt.Printf("By kind:\n")
+	for kind, count := range byKind {
+		fmt.Printf("Kind %s: %d\n", kind, count)
+	}
 	return nil
 }
