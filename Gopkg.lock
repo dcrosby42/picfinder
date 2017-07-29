@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  revision = "a0583e0143b1624142adab07e0e97fe106d99561"
+  version = "v1.3"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jmoiron/sqlx"
+  packages = [".","reflectx"]
+  revision = "d9bd385d68c068f1fabb5057e3dedcbcbb039d0f"
+
+[[projects]]
   name = "github.com/urfave/cli"
   packages = ["."]
   revision = "0bdeddeeb0f650497d603c4ad7b20cfe685682f6"
@@ -10,6 +22,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6ae02e0ebd443716f11ac97ce71a9b0107aba4a0d00104194a62dc4cd1bf9683"
+  inputs-digest = "dcf306c3f66db1bf40e1ef0650af7cf129d62c6717c1dcdebd64ca13bbe25eb7"
   solver-name = "gps-cdcl"
   solver-version = 1
