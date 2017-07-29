@@ -18,6 +18,7 @@ func Command() cli.Command {
 		Subcommands: []cli.Command{
 			sandbox_insert_command(),
 			sandbox_retrieve_command(),
+			sandbox_scan_command(),
 		},
 	}
 }
