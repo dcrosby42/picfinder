@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package picfinder_grpc;
+
+service PicFinder {
+  rpc AddFile(AddFileRequest) returns (AddFileResponse) {}
+}
+
+message RequestHeader {
+}
+
+message ResponseHeader {
+  uint32 status = 1;
+  string message = 2;
+}
+
+message FileInfo {
+  int64 Id = 1;
+  string Host = 2;
+  bytes Path = 3;
+  uint32 PathHash = 4;
+  int64 Size = 5;
+  bytes ContentHash = 6;
+  uint32 ContentHashLower32 = 7;
+  string Type = 8;
+  string Kind = 9;
+  int64 ScannedAtUnix = 10;
+  int64 FileModifiedAtUnix = 11;
+}
+
+message AddFileRequest {
+  RequestHeader Header = 1;
+  FileInfo FileInfo = 2;
+}
+
+message AddFileResponse {
+  ResponseHeader Header = 1;
+  int64 FileId = 2;
+}

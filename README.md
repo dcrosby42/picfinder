@@ -19,5 +19,12 @@ picfinder db rebuild -really
 ```
 
 
+### Generating the grpc code
 
-
+1. Temporarily add imports to `main.go`:
+  - `_ "github.com/golang/protobuf/proto"`
+  - `_ "github.com/golang/protobuf/protoc-gen-go"`
+  - `_ "google.golang.org/grpc"`
+1. Run `dep ensure`
+1. Remove temporary imports from `main.go`
+1. Run `./grpc/gen_protobuf.sh`

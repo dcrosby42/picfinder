@@ -7,6 +7,9 @@ import (
 	"github.com/dcrosby42/picfinder/dbutil"
 	"github.com/dcrosby42/picfinder/sandbox"
 	"github.com/urfave/cli"
+	// _ "github.com/golang/protobuf/proto"
+	// _ "github.com/golang/protobuf/protoc-gen-go"
+	// _ "google.golang.org/grpc"
 )
 
 func main() {
