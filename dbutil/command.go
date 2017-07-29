@@ -1,8 +1,7 @@
-package commands_db
+package dbutil
 
 import (
 	"github.com/dcrosby42/picfinder/commands"
-	"github.com/dcrosby42/picfinder/dbutil"
 	"github.com/urfave/cli"
 )
 
@@ -21,11 +20,11 @@ func db_rebuild_command() cli.Command {
 		Name:  "rebuild",
 		Usage: "Rebuild the entire db from scratch. WILL DESTROY ALL DATA",
 		Action: func(c *cli.Context) error {
-			db, err := dbutil.ConnectDatabase()
+			db, err := ConnectDatabase()
 			if err != nil {
 				return cli.NewExitError(err.Error(), -37)
 			}
-			err = dbutil.RebuildTables(db)
+			err = RebuildTables(db)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}

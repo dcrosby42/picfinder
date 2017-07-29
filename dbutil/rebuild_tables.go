@@ -12,7 +12,7 @@ func RebuildTables(db *sqlx.DB) error {
 		`CREATE TABLE file_info (
 			id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			host varchar(255),
-			path varchar(4096),
+			path blob,
 			path_hash int(11),
 			content_hash blob,
 			content_hash_lower_32 int(11),
