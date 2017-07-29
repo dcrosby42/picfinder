@@ -1,7 +1,7 @@
 # picfinder
 
 ```
-go get -u github.com/golang/dep/cmd/dep
+go get -u github.com/golang/dep/cmd/dep # See https://github.com/golang/dep
 
 go get github.com/dcrosby42/picfinder
 cd $GOPATH/src/github.com/dcrosby42/picfinder
