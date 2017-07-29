@@ -4,6 +4,8 @@ import (
 	"crypto/sha256"
 	"io"
 	"os"
+
+	"github.com/spaolacci/murmur3"
 )
 
 func HashFileContentSha256(filepath string) ([]byte, error) {
@@ -20,4 +22,8 @@ func HashFileContentSha256(filepath string) ([]byte, error) {
 	}
 	return h.Sum(nil), nil
 	// fmt.Printf("Sum256() (%d written) => %x\n", w, h.Sum(nil))
+}
+
+func HashStringMurmer32(str string) uint32 {
+	return murmur3.Sum32([]byte(str))
 }

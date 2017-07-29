@@ -36,7 +36,8 @@ func sandbox_scan_command() cli.Command {
 				// 	fmt.Printf("!!!! ERR filepath=%s err=%s\n", filepath, herr)
 				// }
 				// fmt.Printf("%q, %x\n", filepath, contentHash)
-				fmt.Printf("%q\n", filepath)
+				h := scan.HashStringMurmer32(filepath)
+				fmt.Printf("%q, murmer32=%d\n", filepath, h)
 				return nil
 			})
 			elapsed := time.Now().Sub(started)

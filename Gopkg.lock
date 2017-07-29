@@ -14,6 +14,12 @@
   revision = "d9bd385d68c068f1fabb5057e3dedcbcbb039d0f"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/spaolacci/murmur3"
+  packages = ["."]
+  revision = "0d12bf811670bf6a1a63828dfbd003eded177fce"
+
+[[projects]]
   name = "github.com/urfave/cli"
   packages = ["."]
   revision = "0bdeddeeb0f650497d603c4ad7b20cfe685682f6"
@@ -22,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dcf306c3f66db1bf40e1ef0650af7cf129d62c6717c1dcdebd64ca13bbe25eb7"
+  inputs-digest = "ae3c98e571aae822c334806b4deb85de9df7bf963a461e5fd5d4876df78be194"
   solver-name = "gps-cdcl"
   solver-version = 1
