@@ -6,8 +6,12 @@ import (
 	"os"
 	"time"
 
+	context "golang.org/x/net/context"
+
+	"github.com/dcrosby42/picfinder/api_client"
 	"github.com/dcrosby42/picfinder/dbutil"
 	"github.com/dcrosby42/picfinder/fileinfo"
+	picfinder_grpc "github.com/dcrosby42/picfinder/grpc"
 	"github.com/dcrosby42/picfinder/scan"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli"
@@ -22,6 +26,7 @@ func Command() cli.Command {
 			sandbox_retrieve_command(),
 			sandbox_scan_command(),
 			sandbox_ext_command(),
+			sandbox_client_command(),
 		},
 	}
 }
@@ -147,4 +152,58 @@ func summarizeFileExtensions(dirname string) error {
 		fmt.Printf("Kind %s: %d\n", kind, count)
 	}
 	return nil
+}
+
+func sandbox_client_command() cli.Command {
+	return cli.Command{
+		Name:  "client",
+		Usage: "Test the client conn to picfinder server",
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "host",
+				Usage: "The api server host",
+				Value: "127.0.0.1",
+			},
+			cli.StringFlag{
+				Name:  "port",
+				Usage: "The api server port",
+				Value: "13131",
+			},
+		},
+		Action: func(c *cli.Context) error {
+			host := c.String("host")
+			port := c.String("port")
+
+			client, closeConn, err := api_client.NewClient_HostPort(host, port)
+			if err != nil {
+				return cli.NewExitError(err.Error(), -1)
+			}
+
+			defer closeConn()
+
+			request := &picfinder_grpc.AddFileRequest{}
+			request.FileInfo = &picfinder_grpc.FileInfo{
+				Host:               "XandersBeatBox",
+				Path:               []byte("/Users/crosby/something.txt"),
+				PathHash:           1234,
+				Size:               1024,
+				ContentHash:        []byte("fake content hash"),
+				ContentHashLower32: 5678,
+				Type:               string(fileinfo.JpegType),
+				Kind:               string(fileinfo.PictureKind),
+				ScannedAtUnix:      time.Now().Unix(),
+				FileModifiedAtUnix: time.Now().Add(-1 * time.Hour).Unix(),
+			}
+
+			fmt.Printf("!!!! Sending AddFile request %#v\n", request)
+
+			resp, err := client.AddFile(context.Background(), request)
+			if err != nil {
+				return cli.NewExitError(err.Error(), -1)
+			}
+			fmt.Printf("!!!! Response to AddFile(): %#v\n", resp)
+
+			return nil
+		},
+	}
 }

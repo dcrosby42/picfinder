@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package picfinder_grpc;
 
-service PicFinder {
+service Picfinder {
   rpc AddFile(AddFileRequest) returns (AddFileResponse) {}
 }
 
