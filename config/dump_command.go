@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 
 	"github.com/go-yaml/yaml"
 	"github.com/urfave/cli"
@@ -29,11 +28,13 @@ func DumpConfigCommand() cli.Command {
 		Usage: "Read and dump the config",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) error {
-			fname := "default-config.yaml"
+			fname := c.GlobalString("config")
+			env := c.GlobalString("env")
 
-			// Load config
-			fmt.Printf("Loading config from %q\n", fname)
-			config, err := LoadConfigFile(fname)
+			fmt.Printf("Config file: %q\n", fname)
+			fmt.Printf("Env: %s\n", env)
+
+			config, err := LoadConfig(fname, env, false)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}
@@ -48,22 +49,6 @@ func DumpConfigCommand() cli.Command {
 	}
 }
 
-func LoadConfigFile(fname string) (*PicfinderConfig, error) {
-	data, err := ioutil.ReadFile(fname)
-	if err != nil {
-		return nil, err
-	}
-	config := &PicfinderConfig{}
-	err = yaml.Unmarshal(data, config)
-	if err != nil {
-		return nil, err
-	}
-	err = config.Validate()
-	if err != nil {
-		return nil, err
-	}
-	return config, nil
-}
 func PrintConfig(config *PicfinderConfig) error {
 	serialized, err := yaml.Marshal(config)
 	if err != nil {

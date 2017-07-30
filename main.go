@@ -18,6 +18,7 @@ import (
 func main() {
 	app := cli.NewApp()
 
+	app.Flags = config.GlobalFlags()
 	app.Commands = []cli.Command{
 		commands.ScanCommand(),
 		api_server.Command(),

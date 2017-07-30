@@ -11,10 +11,11 @@ func (me *PicfinderConfig) Validate() error {
 }
 
 type EnvRootConfig struct {
-	Prod    EnvConfig `yaml:"prod"`
-	Dev     EnvConfig `yaml:"dev"`
-	Test    EnvConfig `yaml:"test"`
-	Current EnvConfig `yaml:"-"`
+	Prod        EnvConfig `yaml:"prod"`
+	Dev         EnvConfig `yaml:"dev"`
+	Test        EnvConfig `yaml:"test"`
+	Current     EnvConfig `yaml:"-"`
+	CurrentName string    `yaml:"-"`
 }
 
 func (me *EnvRootConfig) Validate() error {
@@ -34,16 +35,16 @@ func (me *EnvRootConfig) Validate() error {
 	return nil
 }
 
-func (me EnvRootConfig) ForEnv(envname string) *EnvConfig {
+func (me EnvRootConfig) ForEnv(envname string) (*EnvConfig, error) {
 	switch envname {
 	case "prod":
-		return &me.Prod
+		return &me.Prod, nil
 	case "dev":
-		return &me.Dev
+		return &me.Dev, nil
 	case "test":
-		return &me.Test
+		return &me.Test, nil
 	default:
-		return &me.Dev
+		return nil, fmt.Errorf("Invalid env name %q", envname)
 	}
 }
 
