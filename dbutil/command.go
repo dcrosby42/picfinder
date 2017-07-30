@@ -24,7 +24,12 @@ func db_rebuild_command() cli.Command {
 		Name:  "rebuild",
 		Usage: "Rebuild the entire db from scratch. WILL DESTROY ALL DATA",
 		Action: func(c *cli.Context) error {
-			db, err := ConnectDatabase()
+			cfg, err := config.GetConfig(c)
+			if err != nil {
+				return cli.NewExitError(err.Error(), -42)
+			}
+
+			db, err := ConnectDatabase(cfg.Envs.Current.Db)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -37)
 			}
@@ -48,7 +53,7 @@ func db_shellenv_command() cli.Command {
 
 			// fmt.Printf("# Config file: %q, Env: %q:\n", fname, env)
 
-			config, err := config.LoadConfig(fname, env, true)
+			config, err := config.LoadConfig(fname, env, true, true)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}

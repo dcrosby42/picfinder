@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/dcrosby42/picfinder/config"
 	"github.com/dcrosby42/picfinder/dbutil"
 	"github.com/dcrosby42/picfinder/fileinfo"
 	picfinder_grpc "github.com/dcrosby42/picfinder/grpc"
@@ -58,10 +59,10 @@ func (me *apiServer) AddFile(ctx context.Context, request *picfinder_grpc.AddFil
 	return resp, nil
 }
 
-func BuildAndListen(bindAddr string) error {
+func BuildAndListen(bindAddr string, dbConfig config.DbConfig) error {
 	fmt.Printf("Picfinder GRPC Api Server startup, bindAddr=%q\n", bindAddr)
 
-	db, err := dbutil.ConnectDatabase()
+	db, err := dbutil.ConnectDatabase(dbConfig)
 	if err != nil {
 		return fmt.Errorf("Failed to connect database err=%s", err)
 	}

@@ -7,21 +7,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-func RemoteServerFlags() []cli.Flag {
-	return []cli.Flag{
-		cli.StringFlag{
-			Name:  "server",
-			Usage: "The api server host",
-			Value: "127.0.0.1",
-		},
-		cli.StringFlag{
-			Name:  "port",
-			Usage: "The api server port",
-			Value: "13131",
-		},
-	}
-}
-
 func DumpConfigCommand() cli.Command {
 	return cli.Command{
 		Name:  "dumpconfig",
@@ -34,7 +19,7 @@ func DumpConfigCommand() cli.Command {
 			fmt.Printf("Config file: %q\n", fname)
 			fmt.Printf("Env: %s\n", env)
 
-			config, err := LoadConfig(fname, env, false)
+			config, err := LoadConfig(fname, env, true, false)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}

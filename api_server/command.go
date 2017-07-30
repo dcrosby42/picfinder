@@ -1,6 +1,7 @@
 package api_server
 
 import (
+	"github.com/dcrosby42/picfinder/config"
 	"github.com/urfave/cli"
 )
 
@@ -16,7 +17,15 @@ func Command() cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			err := BuildAndListen(c.String("bind"))
+			cfg, err := config.GetConfig(c)
+			if err != nil {
+				return err
+			}
+			if err != nil {
+				return cli.NewExitError(err.Error(), -1)
+			}
+
+			err = BuildAndListen(c.String("bind"), cfg.Envs.Current.Db)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}
