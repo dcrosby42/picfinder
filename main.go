@@ -6,6 +6,7 @@ import (
 	"github.com/dcrosby42/picfinder/api_client"
 	"github.com/dcrosby42/picfinder/api_server"
 	"github.com/dcrosby42/picfinder/commands"
+	"github.com/dcrosby42/picfinder/config"
 	"github.com/dcrosby42/picfinder/dbutil"
 	"github.com/dcrosby42/picfinder/sandbox"
 	"github.com/urfave/cli"
@@ -23,6 +24,7 @@ func main() {
 		api_client.PingCommand(),
 		dbutil.Command(),
 		sandbox.Command(),
+		config.DumpConfigCommand(),
 	}
 
 	app.Run(os.Args)

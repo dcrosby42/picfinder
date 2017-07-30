@@ -1,0 +1,17 @@
+envs:
+  prod:
+    enabled: true
+    db:
+      dbname: picfinder
+      username: picfinder
+      password: picfinder
+      host: localhost
+      port: 3306
+  dev:
+    enabled: false
+    db:
+      dbname: picfinder_dev
+      username: picfinder_dev
+      password: picfinder_dev
+      host: localhost
+      port: 3306

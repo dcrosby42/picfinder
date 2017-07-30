@@ -8,6 +8,12 @@
   version = "v1.3"
 
 [[projects]]
+  branch = "v2"
+  name = "github.com/go-yaml/yaml"
+  packages = ["."]
+  revision = "25c4ec802a7d637f88d584ab26798e94ad14c13b"
+
+[[projects]]
   branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto","ptypes/any"]
@@ -58,6 +64,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "654ad2bc8ced479af03babe9ad092599e5ca8ba4d86f9e72e623a54b7c8f2113"
+  inputs-digest = "dd8f0e5b0400487d4e0a769e97f4abdba6547e23faa7f10768d248a1255d8ac9"
   solver-name = "gps-cdcl"
   solver-version = 1
