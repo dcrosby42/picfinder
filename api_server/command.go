@@ -24,8 +24,14 @@ func Command() cli.Command {
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}
+			if c.IsSet("bind") {
+				cfg.Envs.Current.Server.ApiServer.BindAddr = c.String("bind")
+			}
 
-			err = BuildAndListen(c.String("bind"), cfg.Envs.Current.Db)
+			err = BuildAndListen(
+				cfg.Envs.Current.Server.ApiServer,
+				cfg.Envs.Current.Server.Db,
+			)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}

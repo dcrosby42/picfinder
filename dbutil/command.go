@@ -29,7 +29,7 @@ func db_rebuild_command() cli.Command {
 				return cli.NewExitError(err.Error(), -42)
 			}
 
-			db, err := ConnectDatabase(cfg.Envs.Current.Db)
+			db, err := ConnectDatabase(cfg.Envs.Current.Server.Db)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -37)
 			}
@@ -58,7 +58,7 @@ func db_shellenv_command() cli.Command {
 				return cli.NewExitError(err.Error(), -1)
 			}
 
-			dbConf := config.Envs.Current.Db
+			dbConf := config.Envs.Current.Server.Db
 			fmt.Printf("export PICFINDER_ENV=%s\n", config.Envs.CurrentName)
 			fmt.Printf("export PICFINDER_CONFIG=%s\n", fname)
 			fmt.Printf("export DBNAME=%s\n", dbConf.DbName)

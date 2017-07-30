@@ -59,7 +59,8 @@ func (me *apiServer) AddFile(ctx context.Context, request *picfinder_grpc.AddFil
 	return resp, nil
 }
 
-func BuildAndListen(bindAddr string, dbConfig config.DbConfig) error {
+func BuildAndListen(apiServerConfig config.ApiServerConfig, dbConfig config.DbConfig) error {
+	bindAddr := apiServerConfig.BindAddr
 	fmt.Printf("Picfinder GRPC Api Server startup, bindAddr=%q\n", bindAddr)
 
 	db, err := dbutil.ConnectDatabase(dbConfig)

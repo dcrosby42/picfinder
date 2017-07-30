@@ -49,13 +49,59 @@ func (me EnvRootConfig) ForEnv(envname string) (*EnvConfig, error) {
 }
 
 type EnvConfig struct {
-	Enabled bool     `yaml:"enabled"`
-	Db      DbConfig `yaml:"db"`
+	Enabled bool         `yaml:"enabled"`
+	Server  ServerConfig `yaml:"server"`
+	Client  ClientConfig `yaml:"client"`
 }
 
 func (me *EnvConfig) Validate() error {
 	if me.Enabled {
-		return me.Db.Validate()
+		var err error
+		err = me.Server.Validate()
+		if err != nil {
+			return err
+		}
+		err = me.Client.Validate()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+type ServerConfig struct {
+	Enabled   bool            `yaml:"enabled"`
+	Db        DbConfig        `yaml:"db"`
+	ApiServer ApiServerConfig `yaml:"api_client"`
+}
+
+func (me *ServerConfig) Validate() error {
+	if me.Enabled {
+		var err error
+		err = me.Db.Validate()
+		if err != nil {
+			return err
+		}
+		err = me.ApiServer.Validate()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+type ClientConfig struct {
+	Enabled   bool            `yaml:"enabled"`
+	ApiClient ApiClientConfig `yaml:"api_client"`
+}
+
+func (me *ClientConfig) Validate() error {
+	if me.Enabled {
+		var err error
+		err = me.ApiClient.Validate()
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -77,6 +123,32 @@ func (me *DbConfig) Validate() error {
 	}
 	if me.Password == "" {
 		return fmt.Errorf("password must not be blank")
+	}
+	return nil
+}
+
+type ApiClientConfig struct {
+	Server string `yaml:"server"`
+	Port   string `yaml:"port"`
+}
+
+func (me *ApiClientConfig) Validate() error {
+	if me.Server == "" {
+		return fmt.Errorf("api_client.server must not be blank")
+	}
+	if me.Port == "" {
+		return fmt.Errorf("api_client.port must not be blank")
+	}
+	return nil
+}
+
+type ApiServerConfig struct {
+	BindAddr string `yaml:"bind_addr"`
+}
+
+func (me *ApiServerConfig) Validate() error {
+	if me.BindAddr == "" {
+		return fmt.Errorf("api_server.bind_addr must not be blank")
 	}
 	return nil
 }

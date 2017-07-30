@@ -12,7 +12,11 @@ import (
 func GetConfig(c *cli.Context) (*PicfinderConfig, error) {
 	fname := c.GlobalString("config")
 	env := c.GlobalString("env")
-	return LoadConfig(fname, env, true, true)
+	cfg, err := LoadConfig(fname, env, true, true)
+	if err != nil {
+		return nil, fmt.Errorf("Config file error in %q: %s", fname, err)
+	}
+	return cfg, nil
 }
 
 func LoadConfig(fname string, env string, initDefaultFile bool, setCurrent bool) (*PicfinderConfig, error) {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/dcrosby42/picfinder/config"
 	picfinder_grpc "github.com/dcrosby42/picfinder/grpc"
 	"github.com/urfave/cli"
 )
@@ -29,9 +30,20 @@ func PingCommand() cli.Command {
 		Usage: "Ping the Picfinder GRPC API Server",
 		Flags: RemoteServerFlags(),
 		Action: func(c *cli.Context) error {
-			host := c.String("server")
-			port := c.String("port")
-			err := DoPingServer(host, port)
+			cfg, err := config.GetConfig(c)
+			if err != nil {
+				return cli.NewExitError(err.Error(), -1)
+			}
+			var host, port string
+			if c.IsSet("server") {
+				host = c.String("server")
+				port = c.String("port")
+			} else {
+				host = cfg.Envs.Current.Client.ApiClient.Server
+				port = cfg.Envs.Current.Client.ApiClient.Port
+			}
+
+			err = DoPingServer(host, port)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}
