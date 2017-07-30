@@ -80,7 +80,7 @@ func insertFileInfo(db *sqlx.DB) error {
 		ScannedAtUnix:      time.Now().Unix(),
 		FileModifiedAtUnix: time.Now().Add(-1 * time.Hour).Unix(),
 	}
-	_, err := fileinfo.Insert(db, &f)
+	_, err := fileinfo.Insert(db, f)
 	if err != nil {
 		return err
 	}

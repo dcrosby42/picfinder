@@ -13,14 +13,16 @@ func RebuildTables(db *sqlx.DB) error {
 			id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			host varchar(255),
 			path blob,
-			path_hash int(11),
+			path_hash bigint(20),
 			content_hash blob,
 			content_hash_lower_32 int(11),
 			size int(11),
 			type varchar(255),
 			kind varchar(255),
 			scanned_at int(11),
-			file_modified_at int(11)
+			file_modified_at int(11),
+			UNIQUE KEY uniq_host_path_hash (host, path_hash)
+
 		)`,
 
 		// `DROP INDEX file_info_path_hash`,

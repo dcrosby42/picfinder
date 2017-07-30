@@ -27,7 +27,7 @@ func GenerateFilteredFiles(host string, dirname string, shouldKeep func(string, 
 			finfo := fileinfo.FileInfo{
 				Host:               host,
 				Path:               []byte(fpath),
-				PathHash:           HashStringMurmer32(fpath),
+				PathHash:           HashStringMurmer63(fpath),
 				Size:               info.Size(),
 				Type:               ftype,
 				Kind:               fkind,

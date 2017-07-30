@@ -10,7 +10,7 @@ type FileInfo struct {
 	Id                 int64    `db:"id"`
 	Host               string   `db:"host"`
 	Path               []byte   `db:"path"`
-	PathHash           uint32   `db:"path_hash"`
+	PathHash           uint64   `db:"path_hash"`
 	Size               int64    `db:"size"`
 	ContentHash        []byte   `db:"content_hash"`
 	ContentHashLower32 uint32   `db:"content_hash_lower_32"`
@@ -28,8 +28,8 @@ func (me FileInfo) String() string {
 	return fmt.Sprintf("FileInfo[host=%s path=%s kind=%s type=%s size=%d contentHashLower32=%d contentHash=%x", me.Host, me.PathString(), me.Kind, me.Type, me.Size, me.ContentHashLower32, me.ContentHash)
 }
 
-func FromGrpcFileInfo(ginfo *picfinder_grpc.FileInfo) *FileInfo {
-	return &FileInfo{
+func FromGrpcFileInfo(ginfo *picfinder_grpc.FileInfo) FileInfo {
+	return FileInfo{
 		Id:                 ginfo.Id,
 		Host:               ginfo.Host,
 		Path:               ginfo.Path,
@@ -44,7 +44,7 @@ func FromGrpcFileInfo(ginfo *picfinder_grpc.FileInfo) *FileInfo {
 	}
 }
 
-func ToGrpcFileInfo(info *FileInfo) *picfinder_grpc.FileInfo {
+func ToGrpcFileInfo(info FileInfo) *picfinder_grpc.FileInfo {
 	return &picfinder_grpc.FileInfo{
 		Id:                 info.Id,
 		Host:               info.Host,

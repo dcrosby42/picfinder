@@ -57,6 +57,11 @@ func ScanAndSend(client picfinder_grpc.PicfinderClient, thishost string, dirname
 		}
 	}
 	fmt.Printf("Processed %d files (100%% done), elapsed: %s\n", total, time.Now().Sub(started))
+	if len(errors) > 0 {
+		fmt.Printf("THERE WERE %d ERRORS\n", len(errors))
+	} else {
+		fmt.Printf("No errors\n")
+	}
 
 	return nil
 }
@@ -73,16 +78,20 @@ func UpdateContentHash(info *fileinfo.FileInfo) error {
 
 func SendFileToApi(client picfinder_grpc.PicfinderClient, info *fileinfo.FileInfo) error {
 	request := &picfinder_grpc.AddFileRequest{}
-	request.FileInfo = fileinfo.ToGrpcFileInfo(info)
+	request.FileInfo = fileinfo.ToGrpcFileInfo(*info)
 	resp, err := client.AddFile(context.Background(), request)
 	if err != nil {
 		return err
 	}
-	if resp.Header == nil || resp.Header.Status != 0 {
+	if resp.Header == nil {
 		return fmt.Errorf("api.AddFile() no response header!")
 	}
 	if resp.Header.Status != 0 {
-		return fmt.Errorf("api.AddFile() responded non-0 status. Status=%d Message=%q", resp.Header.Status, resp.Header.Message)
+		return fmt.Errorf("api.AddFile() responded non-0 status. Status=%d Message=%q FileId=%d UpdateAction=%s", resp.Header.Status, resp.Header.Message, resp.FileId, resp.UpdateAction)
 	}
+	// if resp.UpdateAction != string(fileinfo.UpdateAction_Insert) {
+	// 	fmt.Printf("FileId=%d UpdateAction=%s\n", resp.FileId, resp.UpdateAction)
+	// }
+
 	return nil
 }

@@ -43,14 +43,16 @@ func (me *apiServer) AddFile(ctx context.Context, request *picfinder_grpc.AddFil
 	}
 	if request.FileInfo != nil {
 		fileInfo := fileinfo.FromGrpcFileInfo(request.FileInfo)
-		fmt.Printf("AddFile(): host=%s path=%s contentHashLower32=%d\n", fileInfo.Host, fileInfo.PathString(), fileInfo.ContentHashLower32)
-		_, err := fileinfo.Insert(me.db, fileInfo)
+
+		fileInfo, updateAction, err := fileinfo.InsertOrUpdateByHostPath(me.db, fileInfo)
+		resp.UpdateAction = string(updateAction)
 		if err != nil {
-			fmt.Printf("!!! ERR AddFile() updating db err=%s\n", err)
+			fmt.Printf("!!! ERR AddFile(): host=%s path=%s contentHashLower32=%d updateAction=%s, InsertOrUpdateByHostPath err=%s\n", fileInfo.Host, fileInfo.PathString(), fileInfo.ContentHashLower32, updateAction, err)
 			resp.Header.Status = ErrDbConn
-			resp.Header.Message = fmt.Sprintf("AddFile() database error err=%s", err)
+			resp.Header.Message = fmt.Sprintf("Database error during InsertOrUpdateByHostPath")
 			return resp, nil
 		}
+		fmt.Printf("AddFile(): id=%d host=%s path=%s contentHashLower32=%d updateAction=%s\n", fileInfo.Id, fileInfo.Host, fileInfo.PathString(), fileInfo.ContentHashLower32, updateAction)
 	}
 
 	return resp, nil

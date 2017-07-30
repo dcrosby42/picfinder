@@ -27,7 +27,7 @@ message FileInfo {
   int64 Id = 1;
   string Host = 2;
   bytes Path = 3;
-  uint32 PathHash = 4;
+  uint64 PathHash = 4;
   int64 Size = 5;
   bytes ContentHash = 6;
   uint32 ContentHashLower32 = 7;
@@ -45,4 +45,5 @@ message AddFileRequest {
 message AddFileResponse {
   ResponseHeader Header = 1;
   int64 FileId = 2;
+  string UpdateAction = 3;
 }
