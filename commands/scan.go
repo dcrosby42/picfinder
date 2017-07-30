@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"os"
+
 	"github.com/dcrosby42/picfinder/api_client"
 	"github.com/dcrosby42/picfinder/scan"
 	"github.com/urfave/cli"
@@ -18,6 +20,11 @@ func ScanCommand() cli.Command {
 }
 
 func scanFlags() []cli.Flag {
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "localhost"
+	}
+
 	return []cli.Flag{
 		cli.StringFlag{
 			Name:  "dir",
@@ -28,6 +35,11 @@ func scanFlags() []cli.Flag {
 			Name:  "all",
 			Usage: "Scan all the files, not just media files",
 		},
+		cli.StringFlag{
+			Name:  "hostname",
+			Usage: "This computer's hostname",
+			Value: hostname,
+		},
 	}
 }
 
@@ -37,7 +49,7 @@ func scan_info_command() cli.Command {
 		Usage: "Print media file count-ups for a directory.",
 		Flags: scanFlags(),
 		Action: func(c *cli.Context) error {
-			err := scan.PrintFileTypeSummary("localhost", c.String("dir"), c.Bool("all"))
+			err := scan.PrintFileTypeSummary(c.String("hostname"), c.String("dir"), c.Bool("all"))
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}
@@ -52,8 +64,13 @@ func scan_update_command() cli.Command {
 		Usage: "Scan files on local drive and send updates to the picfinder server API.",
 		Flags: append(scanFlags(), api_client.RemoteServerFlags()...),
 		Action: func(c *cli.Context) error {
-			host := c.String("host")
+			host := c.String("server")
 			port := c.String("port")
+			err := api_client.DoPingServer(host, port)
+			if err != nil {
+				return cli.NewExitError(err.Error(), -1)
+			}
+
 			client, closeConn, err := api_client.NewClient_HostPort(host, port)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
@@ -61,7 +78,7 @@ func scan_update_command() cli.Command {
 
 			defer closeConn()
 
-			err = scan.ScanAndSend(client, "xbb", c.String("dir"), c.Bool("all"))
+			err = scan.ScanAndSend(client, c.String("hostname"), c.String("dir"), c.Bool("all"))
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}

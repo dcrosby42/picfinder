@@ -11,7 +11,7 @@ import (
 func RemoteServerFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{
-			Name:  "host",
+			Name:  "server",
 			Usage: "The api server host",
 			Value: "127.0.0.1",
 		},
@@ -29,24 +29,32 @@ func PingCommand() cli.Command {
 		Usage: "Ping the Picfinder GRPC API Server",
 		Flags: RemoteServerFlags(),
 		Action: func(c *cli.Context) error {
-			host := c.String("host")
+			host := c.String("server")
 			port := c.String("port")
-
-			fmt.Printf("Pinging api server %s:%s\n", host, port)
-			client, closeConn, err := NewClient_HostPort(host, port)
+			err := DoPingServer(host, port)
 			if err != nil {
 				return cli.NewExitError(err.Error(), -1)
 			}
-
-			defer closeConn()
-
-			request := &picfinder_grpc.PingRequest{}
-			resp, err := client.Ping(context.Background(), request)
-			if err != nil {
-				return cli.NewExitError(err.Error(), -1)
-			}
-			fmt.Printf("PingResponse Status=%d Message=%q\n", resp.Header.Status, resp.Header.Message)
 			return nil
+
 		},
 	}
+}
+
+func DoPingServer(host, port string) error {
+	fmt.Printf("Pinging api server %s:%s\n", host, port)
+	client, closeConn, err := NewClient_HostPort(host, port)
+	if err != nil {
+		return err
+	}
+
+	defer closeConn()
+
+	request := &picfinder_grpc.PingRequest{}
+	resp, err := client.Ping(context.Background(), request)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("PingResponse Status=%d Message=%q\n", resp.Header.Status, resp.Header.Message)
+	return nil
 }

@@ -60,3 +60,13 @@ host path ?content -> repeated send from client
   return file_info ID of existing record
 
 
+### initial findings
+
+- First scan of xxb:~/Pictures: `Processed 39427 files (100% done), elapsed: 5m48.055060037s`
+- First scan of imac:/Users/liz: 
+```
+$ sudo ./picfinder scan update --dir /Users/liz --server 192.168.1.124
+...
+Processed 167048 files (100% done), elapsed: 2h44m53.323299052s
+THERE WERE 11 ERRORS`
+```
