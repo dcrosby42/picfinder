@@ -2,7 +2,9 @@ package api_server
 
 import (
 	"fmt"
+	"io"
 	"net"
+	"time"
 
 	"github.com/dcrosby42/picfinder/config"
 	"github.com/dcrosby42/picfinder/dbutil"
@@ -57,6 +59,43 @@ func (me *apiServer) AddFile(ctx context.Context, request *picfinder_grpc.AddFil
 	}
 
 	return resp, nil
+}
+
+func (me *apiServer) Sandbox_GetData(stream picfinder_grpc.Picfinder_Sandbox_GetDataServer) error {
+	fmt.Printf("Sandbox_GetData invoked.")
+
+	clientDone := make(chan bool)
+	resp := &picfinder_grpc.Sandbox_GetDataResponse{}
+	go func() {
+		timer := time.NewTicker(1 * time.Second)
+	Dance:
+		for {
+			select {
+			case <-timer.C:
+				resp.Data = []byte("This is the data")
+				stream.Send(resp)
+
+			case <-clientDone:
+				break Dance
+			}
+		}
+	}()
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			fmt.Printf("Sandbox_GetData EOF, exit.")
+			close(clientDone)
+			return nil
+		}
+		if err != nil {
+			fmt.Printf("Sandbox_GetData recv err=%q, exit", err)
+			close(clientDone)
+			return err
+		}
+		fmt.Printf("Sandbox_GetData rec'd request: %#v\n", req)
+	}
+
 }
 
 func BuildAndListen(apiServerConfig config.ApiServerConfig, dbConfig config.DbConfig) error {

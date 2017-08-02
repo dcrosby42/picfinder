@@ -5,6 +5,7 @@ package picfinder_grpc;
 service Picfinder {
   rpc Ping(PingRequest) returns (PingResponse) {}
   rpc AddFile(AddFileRequest) returns (AddFileResponse) {}
+  rpc Sandbox_GetData(stream Sandbox_GetDataRequest) returns (stream Sandbox_GetDataResponse) {}
 }
 
 message RequestHeader {
@@ -46,4 +47,22 @@ message AddFileResponse {
   ResponseHeader Header = 1;
   int64 FileId = 2;
   string UpdateAction = 3;
+}
+
+message Sandbox_GetDataRequest {
+  RequestHeader Header = 1;
+	enum Mode {
+			LoadIfNewer = 0;
+			ForceLoad = 1;
+			JustGetVersion = 2;
+	}
+	Mode mode = 2;
+	int64 HaveVersion = 3;
+}
+
+message Sandbox_GetDataResponse {
+  ResponseHeader Header = 1;
+	int64 Version = 2;
+  bool UpToDate = 3;
+	bytes Data = 4;
 }

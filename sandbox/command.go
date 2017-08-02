@@ -25,6 +25,7 @@ func Command() cli.Command {
 			sandbox_scan_command(),
 			sandbox_ext_command(),
 			sandbox_client_command(),
+			sandbox_testgrpcstream_command(),
 		},
 	}
 }
@@ -201,6 +202,18 @@ func sandbox_client_command() cli.Command {
 			}
 			fmt.Printf("!!!! Response to AddFile(): %#v\n", resp)
 
+			return nil
+		},
+	}
+}
+
+func sandbox_testgrpcstream_command() cli.Command {
+	return cli.Command{
+		Name:  "clientstr",
+		Usage: "GRPC client stream test",
+		Flags: api_client.RemoteServerFlags(),
+		Action: func(c *cli.Context) error {
+			TestGrpcStream(c.String("host"), c.String("port"))
 			return nil
 		},
 	}
